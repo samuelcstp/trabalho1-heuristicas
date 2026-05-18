@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 
 const STORAGE_KEY = 'faltas_data';
@@ -48,6 +48,8 @@ export default function App() {
   const [statusMsg, setStatusMsg] = useState(initial.statusMsg);
   const [lastSavedAt, setLastSavedAt] = useState(null);
   const [isDirty, setIsDirty] = useState(false);
+  const [query, setQuery] = useState('');
+  const [helpOpen, setHelpOpen] = useState(false);
   const lastSavedSnapshotRef = useRef(initial.alunos);
   const statusTimerRef = useRef(null);
 
@@ -57,11 +59,11 @@ export default function App() {
     };
   }, []);
 
-  const showStatus = (message) => {
+  const showStatus = useCallback((message) => {
     setStatusMsg(message);
     if (statusTimerRef.current) window.clearTimeout(statusTimerRef.current);
     statusTimerRef.current = window.setTimeout(() => setStatusMsg(''), 4000);
-  };
+  }, []);
 
   const handleInput = (id, valor) => {
     const faltas = clampInt(valor, { min: 0, max: 99 });
@@ -72,15 +74,41 @@ export default function App() {
     setIsDirty(true);
   };
 
-  const db_save_action = () => {
-    // Salva no localStorage
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(alunos));
-    lastSavedSnapshotRef.current = alunos;
-    setIsDirty(false);
-    const now = new Date();
-    setLastSavedAt(now);
-    showStatus(`Alterações salvas às ${now.toLocaleTimeString()}.`);
-  };
+  const db_save_action = useCallback(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(alunos));
+      lastSavedSnapshotRef.current = alunos;
+      setIsDirty(false);
+      const now = new Date();
+      setLastSavedAt(now);
+      showStatus(`Alterações salvas às ${now.toLocaleTimeString()}.`);
+    } catch {
+      showStatus('Não foi possível salvar (armazenamento indisponível/cheio).');
+    }
+  }, [alunos, showStatus]);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const key = String(e.key || '').toLowerCase();
+      const isSave = (e.ctrlKey || e.metaKey) && key === 's';
+      if (isSave) {
+        e.preventDefault();
+        if (isDirty) db_save_action();
+        return;
+      }
+
+      if (key === 'escape') {
+        setStatusMsg('');
+      }
+
+      if (key === '?' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        setHelpOpen((v) => !v);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [db_save_action, isDirty]);
 
   const undoChanges = () => {
     const snapshot = lastSavedSnapshotRef.current;
@@ -96,6 +124,21 @@ export default function App() {
     return 'Tudo salvo.';
   }, [isDirty, lastSavedAt]);
 
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return alunos;
+    return alunos.filter((a) => {
+      const nome = String(a.nome || '').toLowerCase();
+      const mat = String(a.matricula || '').toLowerCase();
+      return nome.includes(q) || mat.includes(q);
+    });
+  }, [alunos, query]);
+
+  const totals = useMemo(() => {
+    const totalFaltas = alunos.reduce((sum, a) => sum + (Number(a.f) || 0), 0);
+    return { totalAlunos: alunos.length, totalFaltas };
+  }, [alunos]);
+
   return (
     <div className="gf">
       <header className="gf__header">
@@ -110,10 +153,37 @@ export default function App() {
 
       <section className="gf__actions" aria-label="Ações">
         <button className="gf__button" onClick={db_save_action} disabled={!isDirty}>
-          Salvar alterações
+          Salvar alterações <span className="gf__kbd">Ctrl/⌘ S</span>
         </button>
         <button className="gf__button gf__button--secondary" onClick={undoChanges} disabled={!isDirty}>
           Desfazer
+        </button>
+
+        <div className="gf__spacer" />
+
+        <label className="gf__search">
+          <span className="gf__searchLabel">Buscar</span>
+          <input
+            className="gf__searchInput"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Nome ou matrícula"
+            aria-label="Buscar aluno por nome ou matrícula"
+          />
+        </label>
+        {query.trim() ? (
+          <button className="gf__button gf__button--secondary" onClick={() => setQuery('')}>
+            Limpar
+          </button>
+        ) : null}
+
+        <button
+          className="gf__button gf__button--secondary"
+          onClick={() => setHelpOpen((v) => !v)}
+          aria-expanded={helpOpen}
+          aria-controls="ajuda"
+        >
+          Ajuda <span className="gf__kbd">?</span>
         </button>
       </section>
 
@@ -126,7 +196,13 @@ export default function App() {
             <div className="gf__cell gf__cell--faltas">Faltas</div>
           </div>
 
-          {alunos.map((aluno) => (
+          {filtered.length === 0 ? (
+            <div className="gf__empty" role="status">
+              Nenhum aluno encontrado para “{query.trim()}”.
+            </div>
+          ) : null}
+
+          {filtered.map((aluno) => (
             <div key={aluno.id} className="gf__row" role="row">
               <div className="gf__cell gf__cell--id">{aluno.id}</div>
               <div className="gf__cell gf__cell--mat">{aluno.matricula}</div>
@@ -150,8 +226,22 @@ export default function App() {
       </section>
 
       <footer className="gf__footer">
+        <p className="gf__summary">
+          Resumo: <strong>{totals.totalAlunos}</strong> alunos | <strong>{totals.totalFaltas}</strong> faltas no total
+        </p>
+
+        <details id="ajuda" className="gf__help" open={helpOpen} onToggle={(e) => setHelpOpen(e.currentTarget.open)}>
+          <summary className="gf__helpSummary">Como usar</summary>
+          <ul className="gf__helpList">
+            <li>Edite o campo “Faltas” (valores entre 0 e 99).</li>
+            <li>Quando aparecer “alterações não salvas”, clique em “Salvar alterações” ou use <code>Ctrl/⌘ S</code>.</li>
+            <li>Use “Desfazer” para voltar ao último salvamento.</li>
+            <li>Use “Buscar” para encontrar por nome ou matrícula.</li>
+            <li>Atalho: pressione <code>?</code> para abrir/fechar esta ajuda.</li>
+          </ul>
+        </details>
         <p>
-          Versão: 0.0.2 | Armazenamento: <code>localStorage</code> (chave <code>faltas_data</code>)
+          Versão: 0.0.3 | Armazenamento: <code>localStorage</code> (chave <code>faltas_data</code>)
         </p>
       </footer>
     </div>

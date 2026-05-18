@@ -31,6 +31,18 @@ Mudanças focadas em deixar o sistema mais “explicável” e previsível para 
 
 ![imagem da versão 2 do site](imagens/v2.png)
 
+## Versão 3:
+
+Mudanças focadas em reduzir carga de memória (facilitar encontrar/entender ações) e dar mais suporte ao uso.
+
+- Busca por nome ou matrícula (não precisa scrollar a tela para encontrar o aluno)
+- Atalho de teclado para salvar (<code>Ctrl/⌘ S</code>)
+- Mensagem clara quando não há resultados de busca
+- Ajuda rápida dentro do app (passos + atalhos) e tecla <code>?</code> para abrir/fechar
+- Tratamento de erro ao salvar (ex.: armazenamento cheio/indisponível)
+
+![imagem da versão 3 do site](imagens/v3.png)
+
 ## Heurísticas (Nielsen) — checklist
 
 - [x] 1. Visibilidade do status do sistema
@@ -38,8 +50,8 @@ Mudanças focadas em deixar o sistema mais “explicável” e previsível para 
 - [x] 3. Controle e liberdade do usuário
 - [x] 4. Consistência e padrões
 - [x] 5. Prevenção de erros
-- [ ] 6. Reconhecimento em vez de lembrança
-- [ ] 7. Flexibilidade e eficiência de uso
+- [x] 6. Reconhecimento em vez de lembrança
+- [x] 7. Flexibilidade e eficiência de uso
 - [ ] 8. Estética e design minimalista
-- [ ] 9. Ajudar usuários a reconhecer, diagnosticar e recuperar de erros
-- [ ] 10. Ajuda e documentação
+- [x] 9. Ajudar usuários a reconhecer, diagnosticar e recuperar de erros
+- [x] 10. Ajuda e documentação
