@@ -43,6 +43,16 @@ Mudanças focadas em reduzir carga de memória (facilitar encontrar/entender aç
 
 ![imagem da versão 3 do site](imagens/v3.png)
 
+## Versão 4 (Final):
+
+Mudanças focadas em melhorar estética/organização visual sem adicionar complexidade.
+
+- Layout mais limpo: ações organizadas em blocos (buscar separado de salvar/desfazer/ajuda)
+- Tipografia e espaçamento mais discretos
+- Melhor leitura no celular: lista responsiva
+
+![imagem da versão 4 do site](imagens/v4.png)
+
 ## Heurísticas (Nielsen) — checklist
 
 - [x] 1. Visibilidade do status do sistema
@@ -52,6 +62,6 @@ Mudanças focadas em reduzir carga de memória (facilitar encontrar/entender aç
 - [x] 5. Prevenção de erros
 - [x] 6. Reconhecimento em vez de lembrança
 - [x] 7. Flexibilidade e eficiência de uso
-- [ ] 8. Estética e design minimalista
+- [x] 8. Estética e design minimalista
 - [x] 9. Ajudar usuários a reconhecer, diagnosticar e recuperar de erros
 - [x] 10. Ajuda e documentação

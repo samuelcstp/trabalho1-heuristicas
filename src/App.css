@@ -13,11 +13,21 @@
 
 .gf__title {
   margin: 0 0 6px;
+  font-size: 28px;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+}
+
+@media (max-width: 640px) {
+  .gf__title {
+    font-size: 24px;
+  }
 }
 
 .gf__subtitle {
   margin: 0;
   color: var(--text);
+  font-size: 15px;
 }
 
 .gf__subtitle--warn {
@@ -34,11 +44,32 @@
 }
 
 .gf__actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.gf__actionsLeft,
+.gf__actionsRight {
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-bottom: 14px;
   flex-wrap: wrap;
+}
+
+.gf__actionsRight {
+  justify-content: flex-end;
+}
+
+@media (max-width: 820px) {
+  .gf__actions {
+    grid-template-columns: 1fr;
+  }
+  .gf__actionsRight {
+    justify-content: flex-start;
+  }
 }
 
 .gf__button {
@@ -53,6 +84,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  white-space: nowrap;
 }
 
 .gf__button:disabled {
@@ -81,10 +113,6 @@
   }
 }
 
-.gf__spacer {
-  flex: 1 1 auto;
-}
-
 .gf__search {
   display: inline-flex;
   align-items: center;
@@ -106,6 +134,12 @@
   color: var(--text-h);
   font: inherit;
   min-width: 220px;
+}
+
+@media (max-width: 640px) {
+  .gf__searchInput {
+    min-width: 160px;
+  }
 }
 
 .gf__searchInput::placeholder {
@@ -134,6 +168,60 @@
   padding: 12px;
   border-top: 1px solid var(--border);
   align-items: center;
+}
+
+.gf__cell--id {
+  color: var(--text);
+}
+
+.gf__cell--mat {
+  color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .gf__row {
+    grid-template-columns: 1fr 120px;
+    grid-template-areas:
+      'name faltas'
+      'mat faltas';
+    gap: 4px 10px;
+  }
+
+  .gf__row--head {
+    display: none;
+  }
+
+  .gf__cell--id {
+    display: none;
+  }
+
+  .gf__cell--name {
+    grid-area: name;
+  }
+
+  .gf__cell--mat {
+    grid-area: mat;
+    font-size: 13px;
+  }
+
+  .gf__cell--faltas {
+    grid-area: faltas;
+    justify-self: end;
+  }
+}
+
+.gf__row:not(.gf__row--head):hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+@media (prefers-color-scheme: dark) {
+  .gf__row:not(.gf__row--head):hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+.gf__cell {
+  font-size: 15px;
 }
 
 .gf__row--head {
@@ -187,6 +275,7 @@
 
 .gf__summary {
   margin: 0 0 10px;
+  font-size: 14px;
 }
 
 .gf__help {
@@ -194,6 +283,7 @@
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 12px;
+  font-size: 14px;
 }
 
 .gf__helpSummary {

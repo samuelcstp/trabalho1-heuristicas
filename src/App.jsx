@@ -152,39 +152,40 @@ export default function App() {
       </header>
 
       <section className="gf__actions" aria-label="Ações">
-        <button className="gf__button" onClick={db_save_action} disabled={!isDirty}>
-          Salvar alterações <span className="gf__kbd">Ctrl/⌘ S</span>
-        </button>
-        <button className="gf__button gf__button--secondary" onClick={undoChanges} disabled={!isDirty}>
-          Desfazer
-        </button>
+        <div className="gf__actionsLeft">
+          <label className="gf__search">
+            <span className="gf__searchLabel">Buscar</span>
+            <input
+              className="gf__searchInput"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Nome ou matrícula"
+              aria-label="Buscar aluno por nome ou matrícula"
+            />
+          </label>
+          {query.trim() ? (
+            <button className="gf__button gf__button--secondary" onClick={() => setQuery('')}>
+              Limpar
+            </button>
+          ) : null}
+        </div>
 
-        <div className="gf__spacer" />
-
-        <label className="gf__search">
-          <span className="gf__searchLabel">Buscar</span>
-          <input
-            className="gf__searchInput"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Nome ou matrícula"
-            aria-label="Buscar aluno por nome ou matrícula"
-          />
-        </label>
-        {query.trim() ? (
-          <button className="gf__button gf__button--secondary" onClick={() => setQuery('')}>
-            Limpar
+        <div className="gf__actionsRight">
+          <button className="gf__button" onClick={db_save_action} disabled={!isDirty}>
+            Salvar <span className="gf__kbd">Ctrl/⌘ S</span>
           </button>
-        ) : null}
-
-        <button
-          className="gf__button gf__button--secondary"
-          onClick={() => setHelpOpen((v) => !v)}
-          aria-expanded={helpOpen}
-          aria-controls="ajuda"
-        >
-          Ajuda <span className="gf__kbd">?</span>
-        </button>
+          <button className="gf__button gf__button--secondary" onClick={undoChanges} disabled={!isDirty}>
+            Desfazer
+          </button>
+          <button
+            className="gf__button gf__button--secondary"
+            onClick={() => setHelpOpen((v) => !v)}
+            aria-expanded={helpOpen}
+            aria-controls="ajuda"
+          >
+            Ajuda <span className="gf__kbd">?</span>
+          </button>
+        </div>
       </section>
 
       <section className="gf__card" aria-label="Lista de alunos">
@@ -241,7 +242,7 @@ export default function App() {
           </ul>
         </details>
         <p>
-          Versão: 0.0.3 | Armazenamento: <code>localStorage</code> (chave <code>faltas_data</code>)
+          Versão: V4 (final) | Armazenamento: <code>localStorage</code> (chave <code>faltas_data</code>)
         </p>
       </footer>
     </div>
