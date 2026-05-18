@@ -1,16 +1,33 @@
-# React + Vite
+# Gerenciador de Faltas — Trabalho de Heurísticas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação simples para registrar faltas por aluno, feita em React + Vite e persistência de dados em `localStorage`.
 
-Currently, two official plugins are available:
+## Objetivo do trabalho
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Usar esta aplicação como base para aplicar heurísticas de usabilidade/ IHC, registrando a evolução a cada nova heurística utilizada.
 
-## React Compiler
+## Como rodar
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Instalar dependências: `npm install`
+- Rodar em dev: `npm run dev`
 
-## Expanding the ESLint configuration
+## Versão 1:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Lista fixa de alunos (inicializa com 3 se o storage estiver vazio)
+- Campo numérico para alterar faltas
+- Botões que salvam em `localStorage` (chave `faltas_data`)
+
+![imagem da versão 1 do site](imagens/v1.png)
+
+## Heurísticas (Nielsen) — checklist
+
+1. Visibilidade do status do sistema
+2. Correspondência entre o sistema e o mundo real
+3. Controle e liberdade do usuário
+4. Consistência e padrões
+5. Prevenção de erros
+6. Reconhecimento em vez de lembrança
+7. Flexibilidade e eficiência de uso
+8. Estética e design minimalista
+9. Ajudar usuários a reconhecer, diagnosticar e recuperar de erros
+10. Ajuda e documentação
